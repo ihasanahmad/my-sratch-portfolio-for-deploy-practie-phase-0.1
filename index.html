@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hassan Ahmad - Portfolio</title>
+    <link rel="stylesheet" href="styling.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg"></div>
+    <div class="animated-gradient"></div>
+
+    <div class="glass-container">
+        <div class="header-container">
+            <div class="profile-wrapper">
+                <div class="profile-glow"></div>
+                <img src="profile.png" 
+                    class="profile-img" alt="Hassan Ahmad Profile">
+            </div>
+
+            <div class="header-text">
+                <h1 id="myheading" class="hero-title">Hello.</h1>
+                <h2 class="hero-subtitle">I'm Hassan Ahmad</h2>
+                <h1 class="developer-title">Web Developer</h1>
+                <a href="#contact"><button class="butt glass-btn">My Resume</button></a>
+            </div>
+        </div>
+    </div>
+
+    <section class="skills-section">
+        <div class="glass-container">
+            <h3 class="section-title">My Skills</h3>
+            <div class="skills-grid">
+                <div class="skill-card glass-card">
+                    <div class="skill-icon">🌐</div>
+                    <span>HTML</span>
+                </div>
+                <div class="skill-card glass-card">
+                    <div class="skill-icon">🎨</div>
+                    <span>CSS</span>
+                </div>
+                <div class="skill-card glass-card">
+                    <div class="skill-icon">⚡</div>
+                    <span>JavaScript</span>
+                </div>
+                <div class="skill-card glass-card">
+                    <div class="skill-icon">🚀</div>
+                    <span>Web Design</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <div class="glass-container">
+            <h2 class="section-title glass-title">About Me</h2>
+            <p class="about-text">
+                I started my computer science journey from graphic designing and video editing. Through that, I learned to love the process of creating from scratch.
+                Since then, this has led me to computer science as it fulfills my love for learning and building things.
+            </p>
+
+            <div class="stats-grid">
+                <div class="stat-card glass-card">
+                    <h3 class="stat-number">20+</h3>
+                    <p class="stat-label">Completed Projects</p>
+                </div>
+                <div class="stat-card glass-card">
+                    <h3 class="stat-number">95%</h3>
+                    <p class="stat-label">Client Satisfaction</p>
+                </div>
+                <div class="stat-card glass-card">
+                    <h3 class="stat-number">2+</h3>
+                    <p class="stat-label">Years of Experience</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact-section">
+        <div class="glass-container">
+            <h2 class="section-title glass-title">Contact Me</h2>
+            
+            <form action="" method="get" class="contact-form glass-card">
+                <div class="form-group">
+                    <label for="fname">First Name</label>
+                    <input type="text" id="fname" name="fname" placeholder="Enter First Name">
+                </div>
+
+                <div class="form-group">
+                    <label for="lname">Last Name</label>
+                    <input type="text" id="lname" name="lname" placeholder="Enter Last Name">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter Email">
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Project Deadline</label>
+                    <input type="date" id="date" name="date">
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label for="terms" class="checkbox-label">
+                        <input type="checkbox" id="terms" name="terms">
+                        <span>I agree to terms</span>
+                    </label>
+                </div>
+
+                <div class="form-buttons">
+                    <input type="reset" id="reset" value="Reset" class="btn-secondary">
+                    <input type="submit" id="submit" value="Submit Message" class="btn-primary">
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="glass-container">
+            <div class="footer-content">
+                <a href="#home" class="footer-link">Home</a>
+                <a href="#about" class="footer-link">About</a>
+                <a href="#projects" class="footer-link">Projects</a>
+                <a href="#contact" class="footer-link">Contacts</a>
+            </div>
+            <p class="footer-text">© 2025 Hassan Ahmad. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.0.41/dist/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="animations.js"></script>
+
+</body>
+</html>
