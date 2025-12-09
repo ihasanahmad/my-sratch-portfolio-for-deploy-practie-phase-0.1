@@ -13,6 +13,8 @@ body {
     color: #ffffff;
     overflow-x: hidden;
     position: relative;
+    min-height: 100vh;
+    background: #1a1a2e;
 }
 
 /* Animated Background */
@@ -22,9 +24,24 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(-45deg, #1a1a2e, #16213e, #0f3460, #1a1a2e);
+    min-height: 100vh;
+    background: linear-gradient(-45deg, #1a1a2e, #16213e, #0f3460, #1a1a2e, #16213e);
     background-size: 400% 400%;
     z-index: -2;
+    animation: gradientMove 20s ease infinite;
+    will-change: background-position;
+}
+
+@keyframes gradientMove {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 .animated-gradient {
@@ -33,15 +50,18 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
+    min-height: 100vh;
     background: radial-gradient(
         ellipse at 50% 50%,
-        rgba(100, 200, 255, 0.1) 0%,
-        rgba(255, 100, 200, 0.05) 25%,
-        transparent 50%
+        rgba(100, 200, 255, 0.15) 0%,
+        rgba(255, 100, 200, 0.1) 30%,
+        rgba(166, 76, 255, 0.05) 50%,
+        transparent 70%
     );
     pointer-events: none;
     z-index: -1;
     animation: gradientShift 15s ease-in-out infinite;
+    will-change: transform, opacity;
 }
 
 @keyframes gradientShift {
@@ -67,6 +87,10 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* Glass Effect */
@@ -91,7 +115,7 @@ body {
 .header-container {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     margin-top: 60px;
     margin-bottom: 80px;
     flex-wrap: wrap;
@@ -102,6 +126,7 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 30px;
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    width: 100%;
 }
 
 .profile-wrapper {
@@ -275,6 +300,8 @@ body {
     background-clip: text;
     margin-bottom: 30px;
     font-weight: 800;
+    text-align: center;
+    width: 100%;
 }
 
 .glass-title {
@@ -359,7 +386,67 @@ body {
 
 .contact-form {
     max-width: 600px;
+    width: 100%;
     margin: 40px auto;
+}
+
+.form-message {
+    max-width: 600px;
+    width: 100%;
+    margin: 20px auto;
+    padding: 15px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.form-message.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.form-message.success {
+    background: rgba(76, 175, 80, 0.2);
+    border: 2px solid rgba(76, 175, 80, 0.5);
+    color: #4caf50;
+    backdrop-filter: blur(10px);
+}
+
+.form-message.error {
+    background: rgba(244, 67, 54, 0.2);
+    border: 2px solid rgba(244, 67, 54, 0.5);
+    color: #f44336;
+    backdrop-filter: blur(10px);
+}
+
+.form-message.sending {
+    background: rgba(100, 200, 255, 0.2);
+    border: 2px solid rgba(100, 200, 255, 0.5);
+    color: #64c8ff;
+    backdrop-filter: blur(10px);
+}
+
+.local-warning {
+    max-width: 600px;
+    width: 100%;
+    margin: 20px auto;
+    padding: 15px 20px;
+    background: rgba(100, 200, 255, 0.15);
+    border: 2px solid rgba(100, 200, 255, 0.4);
+    border-radius: 12px;
+    color: #64c8ff;
+    font-size: 0.9rem;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    animation: fadeInDown 0.5s ease-out;
+}
+
+.local-warning strong {
+    color: #64c8ff;
+    font-weight: 600;
 }
 
 .form-group {

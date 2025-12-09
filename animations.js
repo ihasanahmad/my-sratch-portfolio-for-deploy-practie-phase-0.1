@@ -39,12 +39,50 @@ const primaryButton = document.querySelector('.glass-btn');
 const profileImg = document.querySelector('.profile-img');
 const profileGlow = document.querySelector('.profile-glow');
 
-// Animate background colors with GSAP
+// Animate background colors with GSAP - Enhanced for better visibility
 if (animatedBg && typeof gsap !== 'undefined') {
+    // Ensure background is visible
+    animatedBg.style.opacity = '1';
+    animatedBg.style.visibility = 'visible';
+    
     gsap.to(animatedBg, {
         backgroundPosition: '400% 400%',
         duration: 25,
         repeat: -1,
+        ease: 'sine.inOut',
+        force3D: true
+    });
+    
+    // Add additional animation for depth
+    gsap.to(animatedBg, {
+        opacity: 1,
+        duration: 1,
+        ease: 'power2.out'
+    });
+}
+
+// Enhanced gradient animation
+if (animatedGradient && typeof gsap !== 'undefined') {
+    animatedGradient.style.opacity = '1';
+    animatedGradient.style.visibility = 'visible';
+    
+    // Create floating effect
+    gsap.to(animatedGradient, {
+        x: 'random(-50, 50)',
+        y: 'random(-50, 50)',
+        duration: 'random(10, 20)',
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        force3D: true
+    });
+    
+    // Opacity pulse
+    gsap.to(animatedGradient, {
+        opacity: 0.8,
+        duration: 4,
+        repeat: -1,
+        yoyo: true,
         ease: 'sine.inOut'
     });
 }
@@ -239,25 +277,70 @@ window.addEventListener('load', () => {
     }
 });
 
-// Create floating particles effect (optional enhancement)
+// Create enhanced floating particles effect for better background visibility
 function createParticles() {
     try {
+        // Remove existing particles if any
+        const existingParticles = document.querySelector('.particles');
+        if (existingParticles) {
+            existingParticles.remove();
+        }
+        
         const particlesContainer = document.createElement('div');
         particlesContainer.className = 'particles';
-        particlesContainer.style.cssText = `position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1;`;
+        particlesContainer.style.cssText = `position: fixed; top: 0; left: 0; width: 100%; height: 100%; min-height: 100vh; pointer-events: none; z-index: -1; overflow: hidden;`;
         document.body.appendChild(particlesContainer);
 
-        for (let i = 0; i < 5; i++) {
+        // Create more particles for better visibility
+        const particleCount = 8;
+        for (let i = 0; i < particleCount; i++) {
             const particle = document.createElement('div');
-            particle.style.cssText = `position: absolute; width: 200px; height: 200px; background: radial-gradient(circle, rgba(100, 200, 255, 0.08), transparent); border-radius: 50%; filter: blur(50px); left: ${Math.random() * 100}%; top: ${Math.random() * 100}%;`;
+            const size = 150 + Math.random() * 200;
+            const x = Math.random() * 100;
+            const y = Math.random() * 100;
+            const opacity = 0.1 + Math.random() * 0.15;
+            
+            particle.style.cssText = `
+                position: absolute;
+                width: ${size}px;
+                height: ${size}px;
+                background: radial-gradient(circle, rgba(100, 200, 255, ${opacity}), rgba(255, 100, 200, ${opacity * 0.5}), transparent);
+                border-radius: 50%;
+                filter: blur(60px);
+                left: ${x}%;
+                top: ${y}%;
+                will-change: transform;
+            `;
             particlesContainer.appendChild(particle);
 
             if (typeof gsap !== 'undefined') {
-                gsap.to(particle, { duration: 20 + i * 5, x: Math.random() * 200 - 100, y: Math.random() * 200 - 100, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+                const duration = 15 + Math.random() * 20;
+                const xMovement = (Math.random() - 0.5) * 300;
+                const yMovement = (Math.random() - 0.5) * 300;
+                
+                gsap.to(particle, {
+                    x: xMovement,
+                    y: yMovement,
+                    duration: duration,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: 'sine.inOut',
+                    force3D: true
+                });
+                
+                // Add opacity animation
+                gsap.to(particle, {
+                    opacity: opacity * 1.5,
+                    duration: duration * 0.7,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: 'sine.inOut'
+                });
             }
         }
+        
+        console.log('✨ Enhanced particles created');
     } catch (e) {
-        // If DOM manipulation fails, fail silently
         console.warn('Particles init failed', e);
     }
 }

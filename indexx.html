@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- This meta tag helps FormSubmit identify the website origin correctly -->
+    <meta name="referrer" content="origin">
+    <title>Contact Us</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+
+    <!-- Warning Banner for Local Files -->
+    <div id="local-file-warning" class="hidden fixed top-0 left-0 w-full bg-amber-100 border-b border-amber-400 text-amber-800 px-4 py-3 shadow-md z-50">
+        <div class="max-w-3xl mx-auto flex items-start">
+            <i class="fa-solid fa-triangle-exclamation mt-1 mr-3 text-amber-600"></i>
+            <div>
+                <p class="font-bold">Running from Local File Detected (file://)</p>
+                <p class="text-sm">FormSubmit requires a web server to work. To fix the error:</p>
+                <ul class="list-disc ml-5 text-sm mt-1">
+                    <li><b>Option 1:</b> Upload this file to a website (Netlify, GitHub Pages, etc.).</li>
+                    <li><b>Option 2:</b> Run a local server (like "Live Server" in VS Code).</li>
+                </ul>
+            </div>
+            <button onclick="document.getElementById('local-file-warning').style.display='none'" class="ml-auto text-amber-800 hover:text-amber-900">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+        <div class="text-center">
+            <h2 class="text-3xl font-extrabold text-gray-900">Get in touch</h2>
+            <p class="mt-2 text-sm text-gray-600">Send us a message and we'll respond as soon as possible.</p>
+        </div>
+    </div>
+
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
+        <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-gray-200">
+            
+            <!-- FORM START -->
+            <!-- Note: target="_blank" ensures the submission opens in a new tab -->
+            <form action="https://formsubmit.co/ihaxanahmad@gmail.com" method="POST" class="space-y-6" target="_blank">
+
+                <input type="text" name="_honey" style="display:none">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_subject" value="New Contact Form Submission!">
+                
+                <!-- Disable Referrer Check (Helps in some local environments, but not all) -->
+                <!-- <input type="hidden" name="_url" value="https://yourwebsite.com/contact.html"> -->
+
+                <!-- Name Field -->
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                    <div class="mt-1 relative rounded-md shadow-sm">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-user text-gray-400"></i>
+                        </div>
+                        <input type="text" name="name" id="name" required class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-3 border" placeholder="John Doe">
+                    </div>
+                </div>
+
+                <!-- Email Field -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                    <div class="mt-1 relative rounded-md shadow-sm">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-envelope text-gray-400"></i>
+                        </div>
+                        <input type="email" name="email" id="email" required class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-3 border" placeholder="john@example.com">
+                    </div>
+                </div>
+
+                <!-- Message Field -->
+                <div>
+                    <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
+                    <div class="mt-1">
+                        <textarea id="message" name="message" rows="4" required class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md p-3" placeholder="How can we help you?"></textarea>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div>
+                    <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
+                        Send Message <i class="fa-solid fa-paper-plane ml-2 mt-1"></i>
+                    </button>
+                </div>
+
+            </form>
+            <!-- FORM END -->
+
+            <div class="mt-6">
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-white text-gray-500">Securely sent via Email</span>
+                    </div>
+                </div>
+                
+                <!-- Fallback Mailto Link -->
+                <div class="mt-4 text-center">
+                    <p class="text-xs text-gray-500 mb-2">If the form above fails due to server issues:</p>
+                    <a href="mailto:ihaxanahmad@gmail.com?subject=Contact%20Form%20Inquiry" class="text-indigo-600 hover:text-indigo-500 text-sm font-medium">
+                        Click here to send via Email App directly
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <p class="text-center text-xs text-gray-400 mt-5">&copy; 2024 Your Company. All rights reserved.</p>
+    </div>
+
+    <!-- Script to Detect File Protocol -->
+    <script>
+        // If the user opens this file directly (file://), show the warning banner
+        if (window.location.protocol === 'file:') {
+            document.getElementById('local-file-warning').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
