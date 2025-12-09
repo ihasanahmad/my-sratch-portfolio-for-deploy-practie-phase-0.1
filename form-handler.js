@@ -1,4 +1,4 @@
-// Form Handler - Simple validation and user feedback
+// Form Handler - Robust form submission with proper error handling
 // FormSubmit handles the actual email sending via form action
 // Includes fallback for local file testing
 
@@ -8,7 +8,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitBtn = document.getElementById('submit');
     const formNext = document.getElementById('form-next');
     
-    if (!form) return;
+    if (!form || !submitBtn) {
+        console.error('Form or submit button not found');
+        return;
+    }
     
     // Check if running from file:// protocol (local file)
     const isLocalFile = window.location.protocol === 'file:';
@@ -20,7 +23,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Handle local file - change form action to prevent FormSubmit error page
     if (isLocalFile) {
-        // Change form action to prevent FormSubmit error page
         form.action = 'javascript:void(0);';
         form.method = 'POST';
     }
@@ -38,6 +40,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     formMessage.className = 'form-message';
                 }, 300);
             }, 8000);
+        }
+    }
+    
+    // Function to reset button state - ALWAYS call this
+    function resetButton() {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.value = 'Submit Message';
         }
     }
     
@@ -70,13 +80,12 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
         
+        // Disable button immediately
+        submitBtn.disabled = true;
+        submitBtn.value = 'Preparing...';
+        
         // If running from local file, copy email content to clipboard
         if (isLocalFile) {
-            // Show sending message
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.value = 'Preparing...';
-            }
             showMessage('Preparing your message...', 'sending');
             
             // Prepare email content
@@ -109,28 +118,36 @@ Subject: ${subject}
 
 ${emailBody}`;
             
-            // Copy to clipboard immediately
-            copyToClipboard(fullEmailText, subject, emailBody, submitBtn, form);
+            // Copy to clipboard with timeout safety
+            copyToClipboard(fullEmailText, subject, emailBody);
+            
+            // Safety timeout - always reset button after 3 seconds
+            setTimeout(() => {
+                resetButton();
+            }, 3000);
             
             return false;
         }
         
         // If running from web server, submit to FormSubmit via AJAX
-        // Show sending message
-        if (submitBtn) {
-            submitBtn.disabled = true;
-            submitBtn.value = 'Sending...';
-        }
         showMessage('Sending your message...', 'sending');
+        submitBtn.value = 'Sending...';
         
         // Create form data and submit to FormSubmit
         const formData = new FormData(form);
         
-        // Submit to FormSubmit
-        fetch('https://formsubmit.co/ajax/ihaxanahmad@gmail.com', {
+        // Submit to FormSubmit with timeout
+        const fetchPromise = fetch('https://formsubmit.co/ajax/ihaxanahmad@gmail.com', {
             method: 'POST',
             body: formData
-        })
+        });
+        
+        // Add timeout to fetch
+        const timeoutPromise = new Promise((_, reject) => {
+            setTimeout(() => reject(new Error('Request timeout')), 10000);
+        });
+        
+        Promise.race([fetchPromise, timeoutPromise])
         .then(response => response.json())
         .then(data => {
             if (data.success) {
@@ -145,43 +162,43 @@ ${emailBody}`;
             showMessage('Error sending message. Please try again or email directly.', 'error');
         })
         .finally(() => {
-            if (submitBtn) {
-                submitBtn.disabled = false;
-                submitBtn.value = 'Submit Message';
-            }
+            resetButton();
         });
     });
     
     // Function to copy email content to clipboard
-    function copyToClipboard(emailText, subject, emailBody, submitBtnRef, formRef) {
+    function copyToClipboard(emailText, subject, emailBody) {
+        let copySuccess = false;
+        
         // Try modern clipboard API first
         if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(emailText).then(() => {
-                showMessage('✓ Message copied to clipboard! Please paste it in an email to ihaxanahmad@gmail.com', 'success');
-                if (formRef) formRef.reset();
-                if (submitBtnRef) {
-                    submitBtnRef.disabled = false;
-                    submitBtnRef.value = 'Submit Message';
-                }
-            }).catch((err) => {
-                console.error('Clipboard error:', err);
-                // Fallback to old method
-                fallbackCopy(emailText, subject, emailBody, submitBtnRef, formRef);
-            });
+            navigator.clipboard.writeText(emailText)
+                .then(() => {
+                    copySuccess = true;
+                    showMessage('✓ Message copied to clipboard! Please paste it in an email to ihaxanahmad@gmail.com', 'success');
+                    form.reset();
+                    resetButton();
+                })
+                .catch((err) => {
+                    console.error('Clipboard API error:', err);
+                    // Fallback to old method
+                    fallbackCopy(emailText, subject, emailBody);
+                });
         } else {
-            // Fallback to old method
-            fallbackCopy(emailText, subject, emailBody, submitBtnRef, formRef);
+            // Fallback to old method immediately
+            fallbackCopy(emailText, subject, emailBody);
         }
     }
     
     // Fallback copy method
-    function fallbackCopy(emailText, subject, emailBody, submitBtnRef, formRef) {
+    function fallbackCopy(emailText, subject, emailBody) {
         try {
             const textarea = document.createElement('textarea');
             textarea.value = emailText;
             textarea.style.position = 'fixed';
             textarea.style.left = '-999999px';
             textarea.style.top = '-999999px';
+            textarea.style.opacity = '0';
             document.body.appendChild(textarea);
             textarea.focus();
             textarea.select();
@@ -192,19 +209,16 @@ ${emailBody}`;
             if (successful) {
                 showMessage('✓ Message copied to clipboard! Please paste it in an email to ihaxanahmad@gmail.com', 'success');
             } else {
-                showMessage(`✓ Please email this to ihaxanahmad@gmail.com:\n\nSubject: ${subject}\n\n${emailBody.substring(0, 300)}...`, 'success');
+                showMessage(`✓ Please email this to ihaxanahmad@gmail.com:\n\nSubject: ${subject}\n\n${emailBody.substring(0, 200)}...`, 'success');
             }
         } catch (err) {
             console.error('Copy error:', err);
-            showMessage(`✓ Please email this to ihaxanahmad@gmail.com:\n\nSubject: ${subject}\n\n${emailBody.substring(0, 300)}...`, 'success');
+            showMessage(`✓ Please email this to ihaxanahmad@gmail.com:\n\nSubject: ${subject}\n\n${emailBody.substring(0, 200)}...`, 'success');
         }
         
         // Always reset form and button
-        if (formRef) formRef.reset();
-        if (submitBtnRef) {
-            submitBtnRef.disabled = false;
-            submitBtnRef.value = 'Submit Message';
-        }
+        form.reset();
+        resetButton();
     }
     
     // Reset button handler
@@ -216,6 +230,7 @@ ${emailBody}`;
                     formMessage.textContent = '';
                     formMessage.className = 'form-message';
                 }
+                resetButton();
             }, 100);
         });
     }
