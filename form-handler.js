@@ -18,12 +18,8 @@ document.addEventListener('DOMContentLoaded', function() {
         formNext.value = window.location.href;
     }
     
-    // Show info message if running locally
+    // Handle local file - change form action to prevent FormSubmit error page
     if (isLocalFile) {
-        const localWarning = document.getElementById('local-warning');
-        if (localWarning) {
-            localWarning.style.display = 'block';
-        }
         // Change form action to prevent FormSubmit error page
         form.action = 'javascript:void(0);';
         form.method = 'POST';
