@@ -68,8 +68,17 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Handle form submission
     form.addEventListener('submit', function(e) {
-        // Always prevent default to handle submission ourselves
-        e.preventDefault();
+        // Check if running from local file first
+        const isLocalFile = window.location.protocol === 'file:';
+        
+        // Only prevent default for local files
+        if (!isLocalFile) {
+            // For web server, let form submit naturally after validation
+            // We'll validate first, then allow submission
+        } else {
+            // For local files, prevent default and use clipboard
+            e.preventDefault();
+        }
         
         const firstName = document.getElementById('fname').value.trim();
         const lastName = document.getElementById('lname').value.trim();
@@ -100,7 +109,8 @@ document.addEventListener('DOMContentLoaded', function() {
         submitBtn.value = 'Preparing...';
         
         // If running from local file, copy email content to clipboard
-        if (isLocalFile) {
+        if (window.location.protocol === 'file:') {
+            e.preventDefault(); // Ensure prevented for local files
             showMessage('Preparing your message...', 'sending');
             
             // Prepare email content
@@ -146,25 +156,24 @@ ${emailBody}`;
         
         // If running from web server, use standard form submission (more reliable)
         // FormSubmit will handle the submission and redirect
-        // Just show a message and let the form submit naturally
         showMessage('Sending your message...', 'sending');
         submitBtn.value = 'Sending...';
         
-        // Allow the form to submit naturally to FormSubmit
-        // Remove preventDefault to let browser handle it
-        // But first, ensure form action is set correctly
+        // Ensure form action is set correctly
         if (form.action !== 'https://formsubmit.co/ihaxanahmad@gmail.com') {
             form.action = 'https://formsubmit.co/ihaxanahmad@gmail.com';
         }
         
         // Set redirect back to current page
         if (formNext) {
-            formNext.value = window.location.href + '?success=true';
+            const baseUrl = window.location.origin + window.location.pathname;
+            formNext.value = baseUrl + '?success=true';
         }
         
-        // Submit the form naturally (browser will handle it)
-        // This is more reliable than AJAX
-        form.submit();
+        // Don't prevent default - let the form submit naturally
+        // Remove the preventDefault for web server submissions
+        // The form will submit to FormSubmit, which will redirect back
+        return true; // Allow form submission
     });
     
     // Function to copy email content to clipboard
