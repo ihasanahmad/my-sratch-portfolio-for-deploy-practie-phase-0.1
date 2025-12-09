@@ -16,9 +16,24 @@ document.addEventListener('DOMContentLoaded', function() {
     // Check if running from file:// protocol (local file)
     const isLocalFile = window.location.protocol === 'file:';
     
+    // Check for success parameter in URL (when returning from FormSubmit)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('success') === 'true') {
+        // Show success message will be called after showMessage is defined
+        setTimeout(() => {
+            if (formMessage) {
+                formMessage.textContent = '✓ Message sent successfully! I will get back to you soon.';
+                formMessage.className = 'form-message success show';
+            }
+        }, 100);
+        // Clean up URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+    
     // Set redirect URL to current page (only if not local file)
     if (formNext && !isLocalFile) {
-        formNext.value = window.location.href;
+        const baseUrl = window.location.origin + window.location.pathname;
+        formNext.value = baseUrl + '?success=true';
     }
     
     // Handle local file - change form action to prevent FormSubmit error page
