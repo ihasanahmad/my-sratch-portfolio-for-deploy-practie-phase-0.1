@@ -109,8 +109,8 @@ Subject: ${subject}
 
 ${emailBody}`;
             
-            // Copy to clipboard
-            copyToClipboard(fullEmailText, subject, emailBody);
+            // Copy to clipboard immediately
+            copyToClipboard(fullEmailText, subject, emailBody, submitBtn, form);
             
             return false;
         }
@@ -153,53 +153,57 @@ ${emailBody}`;
     });
     
     // Function to copy email content to clipboard
-    function copyToClipboard(emailText, subject, emailBody) {
+    function copyToClipboard(emailText, subject, emailBody, submitBtnRef, formRef) {
         // Try modern clipboard API first
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(emailText).then(() => {
                 showMessage('✓ Message copied to clipboard! Please paste it in an email to ihaxanahmad@gmail.com', 'success');
-                form.reset();
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.value = 'Submit Message';
+                if (formRef) formRef.reset();
+                if (submitBtnRef) {
+                    submitBtnRef.disabled = false;
+                    submitBtnRef.value = 'Submit Message';
                 }
-            }).catch(() => {
+            }).catch((err) => {
+                console.error('Clipboard error:', err);
                 // Fallback to old method
-                fallbackCopy(emailText, subject, emailBody);
+                fallbackCopy(emailText, subject, emailBody, submitBtnRef, formRef);
             });
         } else {
             // Fallback to old method
-            fallbackCopy(emailText, subject, emailBody);
+            fallbackCopy(emailText, subject, emailBody, submitBtnRef, formRef);
         }
     }
     
     // Fallback copy method
-    function fallbackCopy(emailText, subject, emailBody) {
-        const textarea = document.createElement('textarea');
-        textarea.value = emailText;
-        textarea.style.position = 'fixed';
-        textarea.style.left = '-999999px';
-        textarea.style.top = '-999999px';
-        document.body.appendChild(textarea);
-        textarea.focus();
-        textarea.select();
-        
+    function fallbackCopy(emailText, subject, emailBody, submitBtnRef, formRef) {
         try {
+            const textarea = document.createElement('textarea');
+            textarea.value = emailText;
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-999999px';
+            textarea.style.top = '-999999px';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            
             const successful = document.execCommand('copy');
+            document.body.removeChild(textarea);
+            
             if (successful) {
                 showMessage('✓ Message copied to clipboard! Please paste it in an email to ihaxanahmad@gmail.com', 'success');
             } else {
-                showMessage(`✓ Please email this to ihaxanahmad@gmail.com:\n\nSubject: ${subject}\n\n${emailBody}`, 'success');
+                showMessage(`✓ Please email this to ihaxanahmad@gmail.com:\n\nSubject: ${subject}\n\n${emailBody.substring(0, 300)}...`, 'success');
             }
         } catch (err) {
-            showMessage(`✓ Please email this to ihaxanahmad@gmail.com:\n\nSubject: ${subject}\n\n${emailBody}`, 'success');
+            console.error('Copy error:', err);
+            showMessage(`✓ Please email this to ihaxanahmad@gmail.com:\n\nSubject: ${subject}\n\n${emailBody.substring(0, 300)}...`, 'success');
         }
         
-        document.body.removeChild(textarea);
-        form.reset();
-        if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.value = 'Submit Message';
+        // Always reset form and button
+        if (formRef) formRef.reset();
+        if (submitBtnRef) {
+            submitBtnRef.disabled = false;
+            submitBtnRef.value = 'Submit Message';
         }
     }
     
