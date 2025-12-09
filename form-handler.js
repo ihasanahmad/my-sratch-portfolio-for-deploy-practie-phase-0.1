@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     formMessage.textContent = '';
                     formMessage.className = 'form-message';
                 }, 300);
-            }, 5000);
+            }, 8000);
         }
     }
     
@@ -70,14 +70,14 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
         
-        // If running from local file, use mailto fallback
+        // If running from local file, copy email content to clipboard
         if (isLocalFile) {
             // Show sending message
             if (submitBtn) {
                 submitBtn.disabled = true;
-                submitBtn.value = 'Opening Email...';
+                submitBtn.value = 'Preparing...';
             }
-            showMessage('Opening your email client...', 'sending');
+            showMessage('Preparing your message...', 'sending');
             
             // Prepare email content
             const subject = `Portfolio Contact: ${firstName} ${lastName}`;
@@ -102,29 +102,20 @@ Please reply directly to: ${email}
 
 Best regards,
 Portfolio Contact Form`;
+
+            // Create full email text
+            const fullEmailText = `To: ihaxanahmad@gmail.com
+Subject: ${subject}
+
+${emailBody}`;
             
-            // Create mailto link
-            const mailtoLink = `mailto:ihaxanahmad@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
-            
-            // Open email client
-            setTimeout(() => {
-                window.location.href = mailtoLink;
-                
-                // Show success message
-                setTimeout(() => {
-                    showMessage('✓ Email client opened! Please send the email to complete your message.', 'success');
-                    form.reset();
-                    if (submitBtn) {
-                        submitBtn.disabled = false;
-                        submitBtn.value = 'Submit Message';
-                    }
-                }, 500);
-            }, 300);
+            // Copy to clipboard
+            copyToClipboard(fullEmailText, subject, emailBody);
             
             return false;
         }
         
-        // If running from web server, submit to FormSubmit
+        // If running from web server, submit to FormSubmit via AJAX
         // Show sending message
         if (submitBtn) {
             submitBtn.disabled = true;
@@ -160,6 +151,57 @@ Portfolio Contact Form`;
             }
         });
     });
+    
+    // Function to copy email content to clipboard
+    function copyToClipboard(emailText, subject, emailBody) {
+        // Try modern clipboard API first
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(emailText).then(() => {
+                showMessage('✓ Message copied to clipboard! Please paste it in an email to ihaxanahmad@gmail.com', 'success');
+                form.reset();
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.value = 'Submit Message';
+                }
+            }).catch(() => {
+                // Fallback to old method
+                fallbackCopy(emailText, subject, emailBody);
+            });
+        } else {
+            // Fallback to old method
+            fallbackCopy(emailText, subject, emailBody);
+        }
+    }
+    
+    // Fallback copy method
+    function fallbackCopy(emailText, subject, emailBody) {
+        const textarea = document.createElement('textarea');
+        textarea.value = emailText;
+        textarea.style.position = 'fixed';
+        textarea.style.left = '-999999px';
+        textarea.style.top = '-999999px';
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        
+        try {
+            const successful = document.execCommand('copy');
+            if (successful) {
+                showMessage('✓ Message copied to clipboard! Please paste it in an email to ihaxanahmad@gmail.com', 'success');
+            } else {
+                showMessage(`✓ Please email this to ihaxanahmad@gmail.com:\n\nSubject: ${subject}\n\n${emailBody}`, 'success');
+            }
+        } catch (err) {
+            showMessage(`✓ Please email this to ihaxanahmad@gmail.com:\n\nSubject: ${subject}\n\n${emailBody}`, 'success');
+        }
+        
+        document.body.removeChild(textarea);
+        form.reset();
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.value = 'Submit Message';
+        }
+    }
     
     // Reset button handler
     const resetBtn = document.getElementById('reset');
